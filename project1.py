@@ -59,3 +59,23 @@ def get_daily_currency_data(outdir, filename, key=key, curr1='EUR', curr2='USD',
         return
 
 # Example: get_daily_currency_data(outdir="C:/Users/RBP7855/Desktop", filename="JPY_to_USD", curr1='JPY', curr2='USD', values='open', num_days=500)
+
+def get_intraday_currency_data(outdir, filename, key=key, curr1='EUR', curr2='USD', values='all', num_obs=100, interval='15min'):
+    fe = ForeignExchange(key, output_format='pandas')
+    data, meta = fe.get_currency_exchange_intraday(from_symbol=curr1, to_symbol=curr2, interval=interval, outputsize='full')
+    filepath = Path(outdir, filename+'.csv')
+    if values=='all':
+        data=pd.DataFrame.head(data, n=num_obs)
+        pd.DataFrame.to_csv(data, filepath, header=True)
+        return
+    options = ['open', 'high', 'low', 'close']
+    for i in range(len(options)):
+        if values == options[i]:
+            data=pd.DataFrame.head(data[data.columns[i]], n=num_obs)
+            pd.DataFrame.to_csv(data, filepath, header=True)
+            return
+    else:
+        print("Error: values must be \'all\', \'open\', \'high\', \'low\', or \'close\'")
+        return
+
+# Example: get_intraday_currency_data(outdir="C:/Users/RBP7855/Desktop", filename="EUR_to_USD_intraday", curr1='EUR', curr2='USD', values='open', num_obs=500, interval='30min')

@@ -1,4 +1,4 @@
-#Project 1: Data Acquisition
+# Project 1: Data Acquisition
 
 ## Daily Equity Data
 
